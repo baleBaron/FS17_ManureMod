@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="37">
+    <author>baron</author>
+    <version>1.17</version>
+    <title>
+		<en>Manure Mod</en>
+    </title>
+    <description>
+		<en>
+<![CDATA[When using this mod, solid manure will give an additional +1 fertilizer state if worked with a cultivator or plough. 
+
+This means if you apply manure to a field and then cultivate or plough you will have raised fertilizer levels +2.]]>
+		</en>
+    </description>
+	<iconFilename>icon.dds</iconFilename>
+    <multiplayer supported="true"/>
+     <extraSourceFiles>
+        <sourceFile filename="manureMod.lua" />
+    </extraSourceFiles>
+	<inputBindings>
+    </inputBindings>	
+</modDesc>
