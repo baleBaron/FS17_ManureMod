@@ -4,38 +4,49 @@
 -- By: baron <mve.karlsson@gmail.com>
 --
 
-local Overwritten = {updateCultivatorArea   = Utils.updateCultivatorArea,
-                     updatePloughArea       = Utils.updatePloughArea}
-
 ManureMod = {}
 
-Utils.updateCultivatorArea = function(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-    ManureMod.fertilizeManureArea(x, z, x1, z1, x2, z2, limitToField)
-    return Overwritten.updateCultivatorArea(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-end
-
-Utils.updatePloughArea = function(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-    ManureMod.fertilizeManureArea(x, z, x1, z1, x2, z2, limitToField)
-    return Overwritten.updatePloughArea(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-end
-
 function ManureMod.fertilizeManureArea(x, z, x1, z1, x2, z2, limitToField)
+    local detailId = g_currentMission.terrainDetailId
+    local sprayFirstChannel = g_currentMission.sprayFirstChannel
+    local sprayNumChannels = g_currentMission.sprayNumChannels
+    local sprayLevelFirstChannel = g_currentMission.sprayLevelFirstChannel
+    local sprayLevelNumChannels = g_currentMission.sprayLevelNumChannels
+    local x0, z0, widthX, widthZ, heightX, heightZ = Utils.getXZWidthAndHeight(detailId, x, z, x1, z1, x2, z2)
+
     -- Increment fertilization levels by 1 where solid manure (spray bit 2)
-    local x0, z0, widthX, widthZ, heightX, heightZ = Utils.getXZWidthAndHeight(g_currentMission.terrainDetailId, x, z, x1, z1, x2, z2)
-    setDensityMaskParams(g_currentMission.terrainDetailId, "equals", 2)
+    setDensityMaskParams(detailId, "equals", 2)
+    setDensityCompareParams(detailId, "greater", 0)
     addDensityMaskedParallelogram(
-        g_currentMission.terrainDetailId,
+        detailId,
         x0, z0, widthX, widthZ, heightX, heightZ,
-        g_currentMission.sprayLevelFirstChannel, g_currentMission.sprayLevelNumChannels,
-        g_currentMission.terrainDetailId, g_currentMission.sprayFirstChannel, g_currentMission.sprayNumChannels,
+        g_currentMission.sprayLevelFirstChannel, sprayLevelNumChannels,
+        detailId, 
+        g_currentMission.sprayFirstChannel, sprayNumChannels,
         1
     )
-    -- Reset spray layer to 0
-    setDensityMaskParams(g_currentMission.terrainDetailId, "greater", -1)
+    setDensityMaskParams(detailId, "greater", 0)
+
+    -- Remove visible fertilizer layer
     setDensityParallelogram(
-        g_currentMission.terrainDetailId,
+        detailId,
         x0, z0, widthX, widthZ, heightX, heightZ,
-        g_currentMission.sprayFirstChannel, g_currentMission.sprayNumChannels,
+        sprayFirstChannel, sprayNumChannels,
         0
     )
+    setDensityCompareParams(detailId, "greater", -1)
 end
+
+-- Install manure mod. 
+-- When relying on alphabetical loading order and doing this after loadMission00Finished 
+-- we hope to overwrite after choppedStraw does to make sure manure was not already deleted
+Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, function(...)
+    Utils.updateCultivatorArea = Utils.overwrittenFunction(Utils.updateCultivatorArea, function(self, superFunc, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+        ManureMod.fertilizeManureArea(self, x, z, x1, z1, x2, z2, limitToField)
+        return superFunc(self, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+    end)
+    Utils.updatePloughArea = Utils.overwrittenFunction(Utils.updatePloughArea, function(self, superFunc, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+        ManureMod.fertilizeManureArea(self, x, z, x1, z1, x2, z2, limitToField)
+        return superFunc(self, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+    end)
+end)
