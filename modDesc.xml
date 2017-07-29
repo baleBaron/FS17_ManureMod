@@ -11,6 +11,11 @@
 
 This means if you apply manure to a field and then cultivate or plough you will have raised fertilizer levels +2.]]>
 		</en>
+		<de>
+<![CDATA[Bei Verwendung dieses Mods wird durch Mist gleich eine zusätzliche Düngestufe nach +1 gegeben.
+
+Dies bedeutet, dass du gleich die Düngestufe +2 erreicht hast, wenn du Mist auf ein Feld bringst und diesen dann mit dem Grubber oder Pflug unterhebst.]]>
+		</de>
     </description>
 	<iconFilename>icon.dds</iconFilename>
     <multiplayer supported="true"/>
@@ -18,5 +23,5 @@ This means if you apply manure to a field and then cultivate or plough you will 
         <sourceFile filename="manureMod.lua" />
     </extraSourceFiles>
 	<inputBindings>
-    </inputBindings>	
+    </inputBindings>
 </modDesc>
