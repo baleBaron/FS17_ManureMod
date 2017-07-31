@@ -16,6 +16,11 @@ This means if you apply manure to a field and then cultivate or plough you will 
 
 Dies bedeutet, dass du gleich die Düngestufe +2 erreicht hast, wenn du Mist auf ein Feld bringst und diesen dann mit dem Grubber oder Pflug unterhebst.]]>
 		</de>
+		<fr>
+<![CDATA[Quand vous utilisez ce mod, le fumier vous donnera un état additionnel de fertilisant +1 si il est travaillé avec une herse ou charrue. 
+
+Ce qui veut dire que si vous déposez du fumier sur un champ et l'enfouissez avec une herse ou charrue, vous augmenterez les niveaux de fertilisants +2.]]>
+		</fr>
     </description>
 	<iconFilename>icon.dds</iconFilename>
     <multiplayer supported="true"/>
