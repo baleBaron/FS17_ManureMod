@@ -41,12 +41,16 @@ end
 -- When relying on alphabetical loading order and doing this after loadMission00Finished 
 -- we hope to overwrite after choppedStraw does to make sure manure was not already deleted
 Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, function(...)
-    Utils.updateCultivatorArea = Utils.overwrittenFunction(Utils.updateCultivatorArea, function(self, superFunc, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-        ManureMod.fertilizeManureArea(self, x, z, x1, z1, x2, z2, limitToField)
-        return superFunc(self, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-    end)
-    Utils.updatePloughArea = Utils.overwrittenFunction(Utils.updatePloughArea, function(self, superFunc, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-        ManureMod.fertilizeManureArea(self, x, z, x1, z1, x2, z2, limitToField)
-        return superFunc(self, x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
-    end)
+
+    local oldUpdateCultivatorArea = Utils.updateCultivatorArea
+    Utils.updateCultivatorArea = function(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+        ManureMod.fertilizeManureArea(x, z, x1, z1, x2, z2, limitToField)
+        return oldUpdateCultivatorArea(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+    end
+
+    local oldUpdatePloughArea = Utils.updatePloughArea
+    Utils.updatePloughArea = function(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+        ManureMod.fertilizeManureArea(x, z, x1, z1, x2, z2, limitToField)
+        return oldUpdatePloughArea(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
+    end
 end)
