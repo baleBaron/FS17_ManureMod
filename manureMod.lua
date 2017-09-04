@@ -54,3 +54,11 @@ Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00
         return oldUpdatePloughArea(x, z, x1, z1, x2, z2, limitToField, limitGrassDestructionToField, angle)
     end
 end)
+
+Sprayer.processSprayerAreas = Utils.overwrittenFunction(Sprayer.processSprayerAreas, function(self, superFunc, workAreas, fillType)
+    if fillType == FillUtil.FILLTYPE_LIQUIDMANURE or fillType == FillUtil.FILLTYPE_DIGESTATE then
+        fillType = FillUtil.FILLTYPE_MANURE
+    end
+    
+    return superFunc(self, workAreas, fillType)
+end)
